@@ -1,0 +1,6 @@
+@KT_Learn_HostAddress = http://localhost:5085
+
+GET {{KT_Learn_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
