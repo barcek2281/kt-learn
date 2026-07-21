@@ -2,7 +2,7 @@
 -- Диалог с ИИ-помощником по конкретному вопросу.
 
 CREATE TABLE tasks_ai_help (
-    id                 uuid         PRIMARY KEY,
+    id                 uuid         PRIMARY KEY DEFAULT gen_random_uuid(),
     task_completion_id uuid         NOT NULL,
     user_prompt        text         NOT NULL,
     ai_response        text         NOT NULL,

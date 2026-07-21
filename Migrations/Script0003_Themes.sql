@@ -2,7 +2,7 @@
 -- Справочник тем: ENG (английский), TGO и так далее.
 
 CREATE TABLE themes (
-    id         uuid         PRIMARY KEY,
+    id         uuid         PRIMARY KEY DEFAULT gen_random_uuid(),
     code       varchar(50)  NOT NULL,
     title      varchar(200) NOT NULL,
     is_active  boolean      NOT NULL DEFAULT true,

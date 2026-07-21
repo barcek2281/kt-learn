@@ -1,4 +1,5 @@
 using KT_Learn.Controllers.Dtos;
+using KT_Learn.Models;
 using KT_Learn.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace KT_Learn.Controllers
             _authService = authService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("register/student")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             var user = await _authService.CreateUser(request);
@@ -60,10 +61,21 @@ namespace KT_Learn.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("admin-only")]
-        public IActionResult AdminOnly()
+        [HttpPost("register/admin")]
+        public async Task<IActionResult> RegisterAdmin(RegisterRequest request)
         {
-            return Ok(new { message = "Ты админ, тебе можно 👑" });
+            var user = await _authService.CreateAdmin(request);
+
+            return Ok(
+                new
+                {
+                    message = "user successfully created",
+                    user = new
+                    {
+                        user.Id,
+                        user.Email
+                    }
+                });
         }
     }
 }

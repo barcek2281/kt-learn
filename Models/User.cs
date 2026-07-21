@@ -6,13 +6,12 @@ namespace KT_Learn.Models
     [Table("users")]
     public class User
     {
-        // None, а не Identity: колонка uuid в схеме без DEFAULT, генерировать
-        // значение некому. Identity заставил бы EF не слать id и ждать его от БД.
-        // v7 упорядочен по времени — вставки идут в конец индекса, а не вразнобой.
+        // Identity: значение генерирует БД через DEFAULT gen_random_uuid().
+        // EF не шлёт id в INSERT и забирает его обратно через RETURNING id.
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
-        public Guid Id { get; set; } = Guid.CreateVersion7();
+        public Guid Id { get; set; }
         
         [Column("email")]
         public string Email { get; set; } = string.Empty;

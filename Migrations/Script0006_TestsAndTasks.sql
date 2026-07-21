@@ -2,7 +2,7 @@
 -- Опубликованный контент. Записи создаются при аппруве черновика копированием из ai_draft_*.
 
 CREATE TABLE tests (
-    id           uuid         PRIMARY KEY,
+    id           uuid         PRIMARY KEY DEFAULT gen_random_uuid(),
     title        varchar(500) NOT NULL,
     description  text         NULL,
     is_published boolean      NOT NULL DEFAULT false,
@@ -39,7 +39,7 @@ CREATE INDEX ix_test_themes_theme ON test_themes (theme_id);
 
 
 CREATE TABLE tasks (
-    id             uuid         PRIMARY KEY,
+    id             uuid         PRIMARY KEY DEFAULT gen_random_uuid(),
     test_id        uuid         NOT NULL,
     theme_id       uuid         NULL,
     type           task_type    NOT NULL,

@@ -2,7 +2,7 @@
 -- Загруженный админом PDF и результат его обработки.
 
 CREATE TABLE pdf_to_test (
-    id            uuid          PRIMARY KEY,
+    id            uuid          PRIMARY KEY DEFAULT gen_random_uuid(),
     uploaded_by   uuid          NOT NULL,
     file_url      varchar(1000) NOT NULL,
     file_name     varchar(500)  NOT NULL,

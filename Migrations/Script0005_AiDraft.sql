@@ -3,7 +3,7 @@
 -- Колонка test_id добавляется позже, в Script0007 — таблицы tests ещё не существует.
 
 CREATE TABLE ai_draft_test (
-    id              uuid                PRIMARY KEY,
+    id              uuid                PRIMARY KEY DEFAULT gen_random_uuid(),
     pdf_to_test_id  uuid                NOT NULL,
     title           varchar(500)        NOT NULL,
     description     text                NULL,
@@ -39,7 +39,7 @@ CREATE INDEX ix_ai_draft_test_review_status
 
 
 CREATE TABLE ai_draft_tasks (
-    id                uuid         PRIMARY KEY,
+    id                uuid         PRIMARY KEY DEFAULT gen_random_uuid(),
     ai_draft_test_id  uuid         NOT NULL,
     theme_id          uuid         NULL,
     theme_raw         varchar(200) NULL,

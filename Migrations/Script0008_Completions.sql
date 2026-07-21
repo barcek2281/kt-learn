@@ -2,7 +2,7 @@
 -- Прохождение тестов пользователями.
 
 CREATE TABLE test_completion (
-    id          uuid              PRIMARY KEY,
+    id          uuid              PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id     uuid              NOT NULL,
     test_id     uuid              NOT NULL,
     status      completion_status NOT NULL DEFAULT 'in_progress',
@@ -45,7 +45,7 @@ CREATE INDEX ix_test_completion_test
 
 
 CREATE TABLE task_completion (
-    id                 uuid         PRIMARY KEY,
+    id                 uuid         PRIMARY KEY DEFAULT gen_random_uuid(),
     test_completion_id uuid         NOT NULL,
     task_id            uuid         NOT NULL,
     answer             jsonb        NOT NULL,
