@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <None Remove="Scripts\**\*.sql" />
-	  <EmbeddedResource Include="Scripts\**\*.sql" />
+	  <None Remove="Migrations\**\*.sql" />
+	  <EmbeddedResource Include="Migrations\**\*.sql" />
 	  
     <PackageReference Include="dbup-postgresql" Version="5.0.40" />
 	  
