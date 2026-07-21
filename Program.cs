@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using KT_Learn.Data;
 using DbUp;
 using System.Reflection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using KT_Learn.Exceptions;
 using KT_Learn.Models;
 using KT_Learn.Services;
@@ -22,27 +22,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        In = ParameterLocation.Header,
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         Description = "Write down jwt token"
     });
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
+            new OpenApiSecuritySchemeReference("Bearer", document),
+            new List<string>()
         }
     });
 });
@@ -60,8 +53,12 @@ if (!upgradeResult.Successful)
     Console.WriteLine($"Migration falled off with error: {upgradeResult.Error}");
     return;   
 }
+// MapEnum обязателен в дополнение к HasPostgresEnum в AppDBContext: модель
+// описывает тип для EF, а этот вызов учит сам драйвер Npgsql передавать
+// значение как user_role, а не как integer.
 builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseNpgsql(connectionString)); // Connect DB context to real DataBase
+    options.UseNpgsql(connectionString, npgsql =>
+        npgsql.MapEnum<Role>("user_role"))); // Connect DB context to real DataBase
 
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); 

@@ -17,7 +17,15 @@ namespace KT_Learn.Services
         public string CreateToken(User user)
         {
             var jwt = _configuration.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwt["Key"]));
+
+            // Без явной проверки отсутствующий Jwt:Key даёт NullReferenceException
+            // где-то в недрах Encoding — по такому сообщению причину не найти.
+            var keyValue = jwt["Key"]
+                ?? throw new InvalidOperationException("Не задан Jwt:Key в конфигурации.");
+            var expiryMinutes = jwt["ExpiryMinutes"]
+                ?? throw new InvalidOperationException("Не задан Jwt:ExpiryMinutes в конфигурации.");
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(keyValue));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -32,7 +40,7 @@ namespace KT_Learn.Services
                 issuer: jwt["Issuer"],
                 audience: jwt["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(int.Parse(jwt["ExpiryMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(int.Parse(expiryMinutes)),
                 signingCredentials: credentials
             );
 

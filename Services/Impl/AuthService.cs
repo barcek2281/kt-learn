@@ -31,7 +31,11 @@ namespace KT_Learn.Services.Impl
 
         public async Task<User> LoginUser(LoginRequest loginRequest)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
+            // lower() с обеих сторон: индекс ux_users_email построен по lower(email),
+            // а без этого зарегистрированный как Admin@mail.com не войдёт под admin@mail.com.
+            var email = loginRequest.Email.ToLowerInvariant();
+
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
             if (user is null)
             {
                 // Не уточняем, что именно неверно — иначе можно перебором узнать, какие email зарегистрированы.
@@ -56,7 +60,9 @@ namespace KT_Learn.Services.Impl
 
         private async Task<User> Create(RegisterRequest registerRequest, Role role)
         {
-            bool emailTaken = await _db.Users.AnyAsync(u => u.Email == registerRequest.Email);
+            var email = registerRequest.Email.ToLowerInvariant();
+
+            bool emailTaken = await _db.Users.AnyAsync(u => u.Email.ToLower() == email);
             if (emailTaken)
             {
                 throw new ConflictException($"Пользователь с email {registerRequest.Email} уже существует.");
@@ -64,7 +70,8 @@ namespace KT_Learn.Services.Impl
 
             var user = new User
             {
-                Email = registerRequest.Email,
+                Email = email,
+                Name = registerRequest.Name,
                 Role = role
             };
             user.Password = _passwordHasher.HashPassword(user, registerRequest.Password);

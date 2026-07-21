@@ -18,7 +18,9 @@ namespace KT_Learn.Data
                 return;
             }
 
-            bool alreadyExists = await db.Users.AnyAsync(u => u.Email == email);
+            email = email.ToLowerInvariant();
+
+            bool alreadyExists = await db.Users.AnyAsync(u => u.Email.ToLower() == email);
             if (alreadyExists)
             {
                 return;
@@ -27,6 +29,7 @@ namespace KT_Learn.Data
             var admin = new User
             {
                 Email = email,
+                Name = "Super Admin",
                 Role = Role.Admin,
             };
             admin.Password = new PasswordHasher<User>().HashPassword(admin, password);

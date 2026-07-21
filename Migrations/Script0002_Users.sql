@@ -10,6 +10,4 @@ CREATE TABLE users (
     updated_at    timestamptz  NOT NULL DEFAULT now()
 );
 
--- По lower(email), иначе User@mail.com и user@mail.com станут разными пользователями.
--- В коде при поиске тоже приводить к нижнему регистру, иначе индекс не применится.
 CREATE UNIQUE INDEX ux_users_email ON users (lower(email));

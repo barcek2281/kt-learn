@@ -1,4 +1,4 @@
-﻿using KT_Learn.Models;
+using KT_Learn.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace KT_Learn.Data
@@ -13,11 +13,9 @@ namespace KT_Learn.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Enum Role хранится в БД как строка ("Student"/"Admin"), а не как число.
-            // Аналог @Enumerated(EnumType.STRING) в JPA.
-            modelBuilder.Entity<User>()
-                .Property(u => u.Role)
-                .HasConversion<string>();
+            // Role — нативный enum-тип PostgreSQL user_role, а не строка и не число.
+            // Имена значений C# Npgsql переводит в snake_case: Role.Student -> 'student'.
+            modelBuilder.HasPostgresEnum<Role>(name: "user_role");
         }
     }
 }
