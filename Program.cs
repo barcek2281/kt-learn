@@ -3,8 +3,12 @@ using KT_Learn.Data;
 using DbUp;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using KT_Learn.Exceptions;
+using KT_Learn.Models;
 using KT_Learn.Services;
+using KT_Learn.Services.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -25,7 +29,7 @@ builder.Services.AddSwaggerGen(options =>
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
-        Description = "������� ����� JWT � �������: Bearer {��� �����}"
+        Description = "Write down jwt token"
     });
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
@@ -80,7 +84,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddSingleton<PasswordHasher<User>>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
@@ -91,6 +100,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler(); // должен идти первым, чтобы ловить всё, что ниже
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
