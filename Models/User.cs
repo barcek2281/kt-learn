@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using KT_Learn.Models.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KT_Learn.Models
@@ -6,8 +7,7 @@ namespace KT_Learn.Models
     [Table("users")]
     public class User
     {
-        // Identity: значение генерирует БД через DEFAULT gen_random_uuid().
-        // EF не шлёт id в INSERT и забирает его обратно через RETURNING id.
+     
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]

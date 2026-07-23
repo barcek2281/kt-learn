@@ -2,6 +2,7 @@ using KT_Learn.Controllers.Dtos;
 using KT_Learn.Data;
 using KT_Learn.Exceptions;
 using KT_Learn.Models;
+using KT_Learn.Models.Enum;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -31,14 +32,11 @@ namespace KT_Learn.Services.Impl
 
         public async Task<User> LoginUser(LoginRequest loginRequest)
         {
-            // lower() с обеих сторон: индекс ux_users_email построен по lower(email),
-            // а без этого зарегистрированный как Admin@mail.com не войдёт под admin@mail.com.
             var email = loginRequest.Email.ToLowerInvariant();
 
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
             if (user is null)
             {
-                // Не уточняем, что именно неверно — иначе можно перебором узнать, какие email зарегистрированы.
                 throw new UnauthorizedException("Invalid email or password.");
             }
 

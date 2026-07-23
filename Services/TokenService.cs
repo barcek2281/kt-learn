@@ -18,8 +18,6 @@ namespace KT_Learn.Services
         {
             var jwt = _configuration.GetSection("Jwt");
 
-            // Без явной проверки отсутствующий Jwt:Key даёт NullReferenceException
-            // где-то в недрах Encoding — по такому сообщению причину не найти.
             var keyValue = jwt["Key"]
                 ?? throw new InvalidOperationException("Не задан Jwt:Key в конфигурации.");
             var expiryMinutes = jwt["ExpiryMinutes"]

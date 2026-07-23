@@ -1,4 +1,4 @@
-﻿namespace KT_Learn.Models
+﻿namespace KT_Learn.Models.Enum
 {
     public enum Role
     {

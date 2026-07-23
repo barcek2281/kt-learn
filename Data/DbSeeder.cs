@@ -1,4 +1,5 @@
 using KT_Learn.Models;
+using KT_Learn.Models.Enum;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
